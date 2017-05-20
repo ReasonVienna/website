@@ -14,15 +14,42 @@ module App = {
     None
   };
 
+
+  let unwrapUnsafely = fun
+    | Some v => v
+    | None => raise (Invalid_argument "unwrapUnsafely called on None");
+
   let componentDidMount {state, setState} => {
     let _ =
     Js.Promise.(
       Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
-      |> then_ Bs_fetch.Response.text
-      |> then_ (fun text => {
+      |> then_ Bs_fetch.Response.json
+      |> then_ (fun json => Js.Json.decodeArray json |> resolve)
+      |> then_ (fun opt => unwrapUnsafely opt |> resolve)
+      /* |> then_ (fun response => {
+        /* setState(fun {state} => ({description: response.description, otherState: "asdf"})); */
+        print_endline response.description |> resolve
+      }) */
+      |> then_ (fun items =>
+          items
+          |> Js.Array.map (fun item =>
+            item
+            |> Js.Json.decodeObject
+            |> unwrapUnsafely)
+          |> resolve)
+      |> then_ (fun items =>
+        items
+        |> Js.Array.map (fun item => {
+          let description = unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "description"));
+
+          /* Js.log(description); */
+          setState(fun {state} => ({description: description, otherState: "asdf"}))
+        })
+        |> resolve)
+      /* |> then_ (fun text => {
         setState(fun {state} => ({description: text, otherState: "asdf"}));
         print_endline text |> resolve
-      })
+      }) */
     );
     None
   };
