@@ -8,8 +8,13 @@ code {
   color: #8f8f8f;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+}
+
 .App {
-  text-align: center;
+  margin: 50px;
 }
 
 .App-logo {
@@ -20,7 +25,7 @@ code {
 .App-header {
   display: flex;
   align-items: center;
-  margin: 100px;
+  margin: 50px 0;
   color: #333333;
 }
 
