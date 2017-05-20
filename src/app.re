@@ -4,9 +4,9 @@
 module App = {
   include ReactRe.Component.Stateful;
   type props = {title: string};
-  type state = {mutable description: string, otherState: string};
-
-  let getInitialState _ => {description: "loading...", otherState: "fdsa"};
+  type event = {title: string, description: string, time: float};
+  type state = {description: string, events: array event};
+  let getInitialState _ => {description: "loading...", events: [|{title:"woot", description: "desc", time: 134.0}|]};
 
   let name = "App";
   let handleClick _ _ => {
@@ -40,12 +40,32 @@ module App = {
       |> then_ (fun items =>
         items
         |> Js.Array.map (fun item => {
-          let description = unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "description"));
+          let unsafeDescription = Js_dict.unsafeGet item "description";
+          let description =
+            unsafeDescription
+            |> Js.Json.decodeString
+            |> unwrapUnsafely;
 
-          /* Js.log(description); */
-          setState(fun {state} => ({description: description, otherState: "asdf"}))
+          /* setState(fun {state} => ({description: description, events: [|{title:"woot", description: "desc", time: 134}|]})); */
+          setState(fun {state} => ({
+            description: "events loaded!",
+            events: [|({
+              title: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "name")),
+              description: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "description")),
+              time: unwrapUnsafely(Js.Json.decodeNumber(Js_dict.unsafeGet item "time"))
+            })|]
+          }))
+          /* ({
+            title: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "name")),
+            description: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "description")),
+            time: 12434
+            /* time: unwrapUnsafely(Js.Json.decodeInt(Js_dict.unsafeGet item "time")) */
+          }) */
         })
         |> resolve)
+      /* |> then_ (fun events =>
+        setState(fun {state} => ({description: "events added", events: Js.Json.decodeArray(events)}))
+        |> resolve) */
       /* |> then_ (fun text => {
         setState(fun {state} => ({description: text, otherState: "asdf"}));
         print_endline text |> resolve
@@ -54,7 +74,16 @@ module App = {
     None
   };
 
-  let render {props, state, updater} =>
+
+  let render {props, state, updater} => {
+    let events =
+      state.events |>
+      Array.map(fun event => {
+        <div>
+        (ReactRe.stringToElement event.title)
+        </div>
+      });
+
     <div
       className="App"
       style=(
@@ -97,12 +126,16 @@ module App = {
           (ReactRe.stringToElement state.description)
         </h2>
       </div>
+      <ul>
+        (ReactRe.arrayToElement events)
+      </ul>
       <p className="App-intro">
         (ReactRe.stringToElement "To get started, edit ")
         <code> (ReactRe.stringToElement "src/app.re") </code>
         (ReactRe.stringToElement " and save to reload.")
       </p>
     </div>;
+  }
 };
 
 include ReactRe.CreateComponent App;
