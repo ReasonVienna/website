@@ -1,4 +1,14 @@
+/* open Bs_fetch; */
+
+
 module App = {
+  /* let asdf =
+  Js.Promise.(
+    fetch "https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
+    |> then_ Response.text
+    |> then_ (fun text => print_endline text |> resolve)
+  ); */
+
   include ReactRe.Component;
   type props = {title: string};
   let name = "App";
