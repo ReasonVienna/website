@@ -1,12 +1,9 @@
-/* open Bs_fetch; */
-
-
 module App = {
   include ReactRe.Component.Stateful;
   type props = {title: string};
-  type event = {title: string, description: string, time: float};
+  type event = {id: string, title: string, description: string, time: float};
   type state = {description: string, events: array event};
-  let getInitialState _ => {description: "loading...", events: [|{title:"woot", description: "desc", time: 134.0}|]};
+  let getInitialState _ => {description: "loading...", events: [||]};
 
   let name = "App";
   let handleClick _ _ => {
@@ -46,10 +43,10 @@ module App = {
             |> Js.Json.decodeString
             |> unwrapUnsafely;
 
-          /* setState(fun {state} => ({description: description, events: [|{title:"woot", description: "desc", time: 134}|]})); */
           setState(fun {state} => ({
             description: "events loaded!",
             events: [|({
+              id: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "id")),
               title: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "name")),
               description: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "description")),
               time: unwrapUnsafely(Js.Json.decodeNumber(Js_dict.unsafeGet item "time"))
@@ -79,8 +76,9 @@ module App = {
     let events =
       state.events |>
       Array.map(fun event => {
-        <div>
-        (ReactRe.stringToElement event.title)
+        <div key=event.id>
+          <h1>(ReactRe.stringToElement event.title)</h1>
+          <div dangerouslySetInnerHTML={"__html": event.description} />
         </div>
       });
 
