@@ -77,6 +77,19 @@ module App = {
       state.events |>
       Array.map(fun event => {
         <div key=event.id>
+          <h1>(ReactRe.stringToElement "When? ")</h1>
+          <time
+            style=(
+              ReactDOMRe.Style.make
+                background::"white"
+                color::"#607096"
+                display::"inline-block"
+                fontSize::"2rem"
+                fontWeight::"700"
+                margin::"1em 0"
+                padding::"10px" ()
+            )
+          >(ReactRe.stringToElement (Js.Date.toLocaleString (Js.Date.fromFloat event.time)))</time>
           <h1>(ReactRe.stringToElement event.title)</h1>
           <div dangerouslySetInnerHTML={"__html": event.description} />
         </div>
