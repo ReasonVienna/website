@@ -2,21 +2,32 @@
 
 
 module App = {
-  /* let asdf =
-  Js.Promise.(
-    fetch "https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
-    |> then_ Response.text
-    |> then_ (fun text => print_endline text |> resolve)
-  ); */
-
-  include ReactRe.Component;
+  include ReactRe.Component.Stateful;
   type props = {title: string};
+  type state = {mutable description: string, otherState: string};
+
+  let getInitialState _ => {description: "loading...", otherState: "fdsa"};
+
   let name = "App";
   let handleClick _ _ => {
     Js.log "clicked!";
     None
   };
-  let render {props, updater} =>
+
+  let componentDidMount {state, setState} => {
+    let _ =
+    Js.Promise.(
+      Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
+      |> then_ Bs_fetch.Response.text
+      |> then_ (fun text => {
+        setState(fun {state} => ({description: text, otherState: "asdf"}));
+        print_endline text |> resolve
+      })
+    );
+    None
+  };
+
+  let render {props, state, updater} =>
     <div
       className="App"
       style=(
@@ -54,6 +65,9 @@ module App = {
         </div>
         <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
           (ReactRe.stringToElement "Reason Vienna")
+        </h2>
+        <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
+          (ReactRe.stringToElement state.description)
         </h2>
       </div>
       <p className="App-intro">
