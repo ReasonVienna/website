@@ -5,10 +5,6 @@ module App = {
   type state = {description: string, events: array event};
   let getInitialState _ => {description: "loading...", events: [||]};
   let name = "App";
-  let handleClick _ _ => {
-    Js.log "clicked!";
-    None
-  };
   let unwrapUnsafely =
     fun
     | Some v => v
@@ -32,9 +28,7 @@ module App = {
           fun items =>
             items |>
             Js.Array.map (
-              fun item => {
-                let unsafeDescription = Js_dict.unsafeGet item "description";
-                let description = unsafeDescription |> Js.Json.decodeString |> unwrapUnsafely;
+              fun item =>
                 setState (
                   fun {state} => {
                     description: "events loaded!",
@@ -58,7 +52,6 @@ module App = {
                      time: 12434
                      /* time: unwrapUnsafely(Js.Json.decodeInt(Js_dict.unsafeGet item "time")) */
                    }) */
-              }
             ) |> resolve
         )
       );
@@ -104,9 +97,7 @@ module App = {
           ()
       )>
       <div className="App-header">
-        <div
-          onClick=(updater handleClick)
-          style=(ReactDOMRe.Style.make display::"flex" width::"50px" cursor::"pointer" ())>
+        <div style=(ReactDOMRe.Style.make display::"flex" width::"50px" cursor::"pointer" ())>
           <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 406 406">
             <defs>
               <style> (ReactRe.stringToElement ".cls-1{fill:#607096;}.cls-2{fill:#fff;}") </style>
