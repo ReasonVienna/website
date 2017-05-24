@@ -24,25 +24,17 @@ module App = {
           fun items =>
             items |>
             Js.Array.map (
-              fun item =>
-                setState (
-                  fun _ => {
-                    description: "events loaded!",
-                    events: [|
-                      {
-                        id: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "id")),
-                        title:
-                          unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "name")),
-                        description:
-                          unwrapUnsafely (
-                            Js.Json.decodeString (Js_dict.unsafeGet item "description")
-                          ),
-                        time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
-                      }
-                    |]
-                  }
-                )
-            ) |> resolve
+              fun item => {
+                id: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "id")),
+                title: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "name")),
+                description:
+                  unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "description")),
+                time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
+              }
+            ) |> (
+              fun items =>
+                setState (fun _ => {description: "events loaded!", events: items}) |> resolve
+            )
         )
       );
     None
