@@ -9,17 +9,13 @@ module App = {
     fun
     | Some v => v
     | None => raise (Invalid_argument "unwrapUnsafely called on None");
-  let componentDidMount {state, setState} => {
+  let componentDidMount {setState} => {
     let _ =
       Js.Promise.(
         Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740" |>
         then_ Bs_fetch.Response.json |>
         then_ (fun json => Js.Json.decodeArray json |> resolve) |>
         then_ (fun opt => unwrapUnsafely opt |> resolve) |>
-        /* |> then_ (fun response => {
-             /* setState(fun {state} => ({description: response.description, otherState: "asdf"})); */
-             print_endline response.description |> resolve
-           }) */
         then_ (
           fun items =>
             items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |> resolve
@@ -30,7 +26,7 @@ module App = {
             Js.Array.map (
               fun item =>
                 setState (
-                  fun {state} => {
+                  fun _ => {
                     description: "events loaded!",
                     events: [|
                       {
@@ -46,25 +42,12 @@ module App = {
                     |]
                   }
                 )
-                /* ({
-                     title: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "name")),
-                     description: unwrapUnsafely(Js.Json.decodeString(Js_dict.unsafeGet item "description")),
-                     time: 12434
-                     /* time: unwrapUnsafely(Js.Json.decodeInt(Js_dict.unsafeGet item "time")) */
-                   }) */
             ) |> resolve
         )
       );
-    /* |> then_ (fun events =>
-       setState(fun {state} => ({description: "events added", events: Js.Json.decodeArray(events)}))
-       |> resolve) */
-    /* |> then_ (fun text => {
-         setState(fun {state} => ({description: text, otherState: "asdf"}));
-         print_endline text |> resolve
-       }) */
     None
   };
-  let render {props, state, updater} => {
+  let render {state} => {
     let events =
       state.events |>
       Array.map (
