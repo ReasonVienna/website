@@ -134,11 +134,6 @@ module App = {
         </h2>
       </div>
       <ul> (ReactRe.arrayToElement events) </ul>
-      <p className="App-intro">
-        (ReactRe.stringToElement "To get started, edit ")
-        <code> (ReactRe.stringToElement "src/app.re") </code>
-        (ReactRe.stringToElement " and save to reload.")
-      </p>
     </div>
   };
 };
