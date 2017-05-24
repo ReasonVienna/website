@@ -16,20 +16,18 @@ module App = {
     time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
   };
   let componentDidMount {setState} => {
+    let changeState items => setState (fun _ => {description: "events loaded!", events: items});
+    let processJson c r json =>
+      unwrapUnsafely (Js.Json.decodeArray json) |> (
+        fun items =>
+          items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |>
+          Js.Array.map convertToEvent |> c |> r
+      );
     let _ =
       Js.Promise.(
         Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740" |>
         then_ Bs_fetch.Response.json |>
-        then_ (
-          fun json =>
-            unwrapUnsafely (Js.Json.decodeArray json) |> (
-              fun items =>
-                items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |>
-                Js.Array.map convertToEvent |> (
-                  fun items => setState (fun _ => {description: "events loaded!", events: items})
-                ) |> resolve
-            )
-        )
+        then_ (processJson changeState resolve)
       );
     None
   };
