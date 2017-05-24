@@ -24,14 +24,10 @@ module App = {
           fun json =>
             unwrapUnsafely (Js.Json.decodeArray json) |> (
               fun items =>
-                items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |> resolve
-            )
-        ) |>
-        then_ (
-          fun items =>
-            items |> Js.Array.map convertToEvent |> (
-              fun items =>
-                setState (fun _ => {description: "events loaded!", events: items}) |> resolve
+                items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |>
+                Js.Array.map convertToEvent |> (
+                  fun items => setState (fun _ => {description: "events loaded!", events: items})
+                ) |> resolve
             )
         )
       );
