@@ -9,33 +9,25 @@ module App = {
     fun
     | Some v => v
     | None => raise (Invalid_argument "unwrapUnsafely called on None");
+  let convertToEvent item => {
+    id: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "id")),
+    title: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "name")),
+    description: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "description")),
+    time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
+  };
   let componentDidMount {setState} => {
+    let changeState items => setState (fun _ => {description: "events loaded!", events: items});
+    let processJson c r json =>
+      unwrapUnsafely (Js.Json.decodeArray json) |> (
+        fun items =>
+          items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |>
+          Js.Array.map convertToEvent |> c |> r
+      );
     let _ =
       Js.Promise.(
         Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740" |>
         then_ Bs_fetch.Response.json |>
-        then_ (fun json => Js.Json.decodeArray json |> resolve) |>
-        then_ (fun opt => unwrapUnsafely opt |> resolve) |>
-        then_ (
-          fun items =>
-            items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |> resolve
-        ) |>
-        then_ (
-          fun items =>
-            items |>
-            Js.Array.map (
-              fun item => {
-                id: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "id")),
-                title: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "name")),
-                description:
-                  unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "description")),
-                time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
-              }
-            ) |> (
-              fun items =>
-                setState (fun _ => {description: "events loaded!", events: items}) |> resolve
-            )
-        )
+        then_ (processJson changeState resolve)
       );
     None
   };
