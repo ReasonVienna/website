@@ -38,6 +38,7 @@ I'd like this to be a great "Get started..." place for Reason. Please submit fea
 
 ### Ideas for future TODOs
 
+* Decode Json using https://github.com/BuckleTypes/bs-json
 * Boilerplate for all ReasonML meetups (other countries)
 * Profile pages for speakers/participants (way to share Code or Talks) - people can PR their profiles into the project
 * Fetch YouTube and Meetup data into the page
