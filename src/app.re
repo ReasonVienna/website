@@ -8,7 +8,8 @@ module App = {
     {city: "New York City", name: "Reason NYC", page: "https://www.meetup.com/ReasonML-NYC/", logo: "https://secure.meetupstatic.com/photos/event/9/1/2/f/global_461257167.jpeg"},
     {city: "Sydney", name: "Reason Sydney", page: "https://www.meetup.com/reason-sydney/", logo: "https://secure.meetupstatic.com/photos/event/c/e/4/c/global_460672812.jpeg"},
     {city: "Paris", name: "ReasonML Paris", page: "https://www.meetup.com/ReasonML-Paris/", logo: "https://secure.meetupstatic.com/photos/event/6/4/b/1/global_457585777.jpeg"},
-    {city: "Oslo", name: "Reason Oslo Meetup", page: "https://reasonoslo.xyz/", logo: "https://reasonoslo.xyz/logo.png"} |];
+    {city: "Oslo", name: "Reason Oslo Meetup", page: "https://reasonoslo.xyz/", logo: "https://reasonoslo.xyz/logo.png"},
+    {city: "Montreal", name: "ReasonMTL Montreal", page: "https://www.meetup.com/ReasonMTL/", logo: ""} |];
   let getInitialState _ => {description: "loading...", events: [||], meetups: knownMeetups};
   let name = "App";
   let unwrapUnsafely =
