@@ -2,8 +2,13 @@ module App = {
   include ReactRe.Component.Stateful;
   type props = {title: string};
   type event = {id: string, title: string, description: string, time: float};
-  type state = {description: string, events: array event};
-  let getInitialState _ => {description: "loading...", events: [||]};
+  type reasonMeetup = {city: string, name: string, page: string, logo: string};
+  type state = {description: string, events: array event, meetups: array reasonMeetup};
+  let knownMeetups = [|{city: "Chicago", name: "Chicago ReasonML", page: "https://www.meetup.com/Chicago-ReasonML/", logo: "https://secure.meetupstatic.com/photos/event/3/4/c/b/global_459553515.jpeg"},
+    {city: "New York City", name: "Reason NYC", page: "https://www.meetup.com/ReasonML-NYC/", logo: "https://secure.meetupstatic.com/photos/event/9/1/2/f/global_461257167.jpeg"},
+    {city: "Sydney", name: "Reason Sydney", page: "https://www.meetup.com/reason-sydney/", logo: "https://secure.meetupstatic.com/photos/event/c/e/4/c/global_460672812.jpeg"},
+    {city: "Paris", name: "ReasonML Paris", page: "https://www.meetup.com/ReasonML-Paris/", logo: "https://secure.meetupstatic.com/photos/event/6/4/b/1/global_457585777.jpeg"} |];
+  let getInitialState _ => {description: "loading...", events: [||], meetups: knownMeetups};
   let name = "App";
   let unwrapUnsafely =
     fun
@@ -16,7 +21,7 @@ module App = {
     time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
   };
   let componentDidMount {setState} => {
-    let changeState items => setState (fun _ => {description: "events loaded!", events: items});
+    let changeState items => setState (fun _ => {description: "events loaded!", events: items, meetups: knownMeetups});
     let processJson c r json =>
       unwrapUnsafely (Js.Json.decodeArray json) |> (
         fun items =>
@@ -56,6 +61,7 @@ module App = {
             <div dangerouslySetInnerHTML={"__html": event.description} />
           </div>
       );
+    let worldWideReasonMeetups = state.meetups |> Array.map (fun m => <li> <a href=m.page> (ReactRe.stringToElement m.name) </a> </li>);
     <div
       className="App"
       style=(
@@ -92,6 +98,8 @@ module App = {
         </h2>
       </div>
       <ul> (ReactRe.arrayToElement events) </ul>
+      <ul> (ReactRe.stringToElement "ReasonML meetups form around the World:")
+        (ReactRe.arrayToElement worldWideReasonMeetups) </ul>
     </div>
   };
 };
