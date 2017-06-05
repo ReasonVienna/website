@@ -1,15 +1,49 @@
+open MomentRe;
+
 module App = {
   include ReactRe.Component.Stateful;
   type props = {title: string};
   type event = {id: string, title: string, description: string, time: float};
   type reasonMeetup = {city: string, name: string, page: string, logo: string};
   type state = {description: string, events: array event, meetups: array reasonMeetup};
-  let knownMeetups = [|{city: "Chicago", name: "Chicago ReasonML", page: "https://www.meetup.com/Chicago-ReasonML/", logo: "https://secure.meetupstatic.com/photos/event/3/4/c/b/global_459553515.jpeg"},
-    {city: "New York City", name: "Reason NYC", page: "https://www.meetup.com/ReasonML-NYC/", logo: "https://secure.meetupstatic.com/photos/event/9/1/2/f/global_461257167.jpeg"},
-    {city: "Sydney", name: "Reason Sydney", page: "https://www.meetup.com/reason-sydney/", logo: "https://secure.meetupstatic.com/photos/event/c/e/4/c/global_460672812.jpeg"},
-    {city: "Paris", name: "ReasonML Paris", page: "https://www.meetup.com/ReasonML-Paris/", logo: "https://secure.meetupstatic.com/photos/event/6/4/b/1/global_457585777.jpeg"},
-    {city: "Oslo", name: "Reason Oslo Meetup", page: "https://reasonoslo.xyz/", logo: "https://reasonoslo.xyz/logo.png"},
-    {city: "Montreal", name: "ReasonMTL Montreal", page: "https://www.meetup.com/ReasonMTL/", logo: ""} |];
+  let knownMeetups = [|
+    {
+      city: "Chicago",
+      name: "Chicago ReasonML",
+      page: "https://www.meetup.com/Chicago-ReasonML/",
+      logo: "https://secure.meetupstatic.com/photos/event/3/4/c/b/global_459553515.jpeg"
+    },
+    {
+      city: "New York City",
+      name: "Reason NYC",
+      page: "https://www.meetup.com/ReasonML-NYC/",
+      logo: "https://secure.meetupstatic.com/photos/event/9/1/2/f/global_461257167.jpeg"
+    },
+    {
+      city: "Sydney",
+      name: "Reason Sydney",
+      page: "https://www.meetup.com/reason-sydney/",
+      logo: "https://secure.meetupstatic.com/photos/event/c/e/4/c/global_460672812.jpeg"
+    },
+    {
+      city: "Paris",
+      name: "ReasonML Paris",
+      page: "https://www.meetup.com/ReasonML-Paris/",
+      logo: "https://secure.meetupstatic.com/photos/event/6/4/b/1/global_457585777.jpeg"
+    },
+    {
+      city: "Oslo",
+      name: "Reason Oslo Meetup",
+      page: "https://reasonoslo.xyz/",
+      logo: "https://reasonoslo.xyz/logo.png"
+    },
+    {
+      city: "Montreal",
+      name: "ReasonMTL Montreal",
+      page: "https://www.meetup.com/ReasonMTL/",
+      logo: ""
+    }
+  |];
   let getInitialState _ => {description: "loading...", events: [||], meetups: knownMeetups};
   let name = "App";
   let unwrapUnsafely =
@@ -23,7 +57,8 @@ module App = {
     time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
   };
   let componentDidMount {setState} => {
-    let changeState items => setState (fun _ => {description: "events loaded!", events: items, meetups: knownMeetups});
+    let changeState items =>
+      setState (fun _ => {description: "events loaded!", events: items, meetups: knownMeetups});
     let processJson c r json =>
       unwrapUnsafely (Js.Json.decodeArray json) |> (
         fun items =>
@@ -42,7 +77,8 @@ module App = {
     let events =
       state.events |>
       Array.map (
-        fun event =>
+        fun event => {
+          let meetupTime = event.time |> Js.Date.fromFloat |> Js.Date.toISOString |> moment;
           <div key=event.id>
             <h1> (ReactRe.stringToElement "When? ") </h1>
             <time
@@ -57,13 +93,18 @@ module App = {
                   padding::"10px"
                   ()
               )>
-              (ReactRe.stringToElement (Js.Date.toLocaleString (Js.Date.fromFloat event.time)))
+              (ReactRe.stringToElement (Moment.format "dddd, MMMM D, YYYY" meetupTime))
+              <br />
+              (ReactRe.stringToElement (Moment.format "H:mm" meetupTime))
             </time>
             <h1> (ReactRe.stringToElement event.title) </h1>
             <div dangerouslySetInnerHTML={"__html": event.description} />
           </div>
+        }
       );
-    let worldWideReasonMeetups = state.meetups |> Array.map (fun m => <li> <a href=m.page> (ReactRe.stringToElement m.name) </a> </li>);
+    let worldWideReasonMeetups =
+      state.meetups |>
+      Array.map (fun m => <li> <a href=m.page> (ReactRe.stringToElement m.name) </a> </li>);
     <div
       className="App"
       style=(
@@ -100,8 +141,10 @@ module App = {
         </h2>
       </div>
       <ul> (ReactRe.arrayToElement events) </ul>
-      <ul> (ReactRe.stringToElement "ReasonML meetups from around the World:")
-        (ReactRe.arrayToElement worldWideReasonMeetups) </ul>
+      <ul>
+        (ReactRe.stringToElement "ReasonML meetups from around the World:")
+        (ReactRe.arrayToElement worldWideReasonMeetups)
+      </ul>
     </div>
   };
 };
