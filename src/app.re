@@ -4,9 +4,12 @@ module App = {
   include ReactRe.Component.Stateful;
   type props = {title: string};
   type event = {id: string, title: string, description: string, time: float};
-  type reasonMeetup = {city: string, name: string, page: string, logo: string};
-  type state = {description: string, events: array event, meetups: array reasonMeetup};
-  let knownMeetups = [|
+  type state = {
+    description: string,
+    events: array event,
+    meetups: array Meetup.Meetup.reasonMeetup
+  };
+  let knownMeetups: array Meetup.Meetup.reasonMeetup = [|
     {
       city: "Chicago",
       name: "Chicago ReasonML",
@@ -102,49 +105,47 @@ module App = {
           </div>
         }
       );
-    let worldWideReasonMeetups =
-      state.meetups |>
-      Array.map (fun m => <li> <a href=m.page> (ReactRe.stringToElement m.name) </a> </li>);
-    <div
-      className="App"
-      style=(
-        ReactDOMRe.Style.make
-          fontFamily::"-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
-          ()
-      )>
-      <div className="App-header">
-        <div style=(ReactDOMRe.Style.make display::"flex" width::"50px" cursor::"pointer" ())>
-          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 406 406">
-            <defs>
-              <style> (ReactRe.stringToElement ".cls-1{fill:#607096;}.cls-2{fill:#fff;}") </style>
-            </defs>
-            <g id="Ebene_2">
-              <g id="Ebene_22">
-                <rect className="cls-1" width="406" height="406" />
-                <path
-                  className="cls-2"
-                  d="M191,382.3,168,338.66H137.45V382.3H96.28V224.63h70.85q31.26,0,48.47,14.51T232.82,280q0,17.77-7.2,30.7a49.77,49.77,0,0,1-20.92,20.13l32.84,51.51Zm-53.53-76.48h29.92q12.59,0,19.46-6.3t6.86-18.22q0-11.47-6.86-17.66t-19.46-6.19H137.45Z"
-                />
-                <path
-                  className="cls-2"
-                  d="M259.13,224.63H383.52v32.84H300.29v29.47h75.13v32.61l-75.13.23v29.69h85.47V382.3H259.13Z"
-                />
+    <div>
+      <div
+        className="App"
+        style=(
+          ReactDOMRe.Style.make
+            fontFamily::"-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+            ()
+        )>
+        <div className="App-header">
+          <div style=(ReactDOMRe.Style.make display::"flex" width::"50px" cursor::"pointer" ())>
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 406 406">
+              <defs>
+                <style>
+                  (ReactRe.stringToElement ".cls-1{fill:#607096;}.cls-2{fill:#fff;}")
+                </style>
+              </defs>
+              <g id="Ebene_2">
+                <g id="Ebene_22">
+                  <rect className="cls-1" width="406" height="406" />
+                  <path
+                    className="cls-2"
+                    d="M191,382.3,168,338.66H137.45V382.3H96.28V224.63h70.85q31.26,0,48.47,14.51T232.82,280q0,17.77-7.2,30.7a49.77,49.77,0,0,1-20.92,20.13l32.84,51.51Zm-53.53-76.48h29.92q12.59,0,19.46-6.3t6.86-18.22q0-11.47-6.86-17.66t-19.46-6.19H137.45Z"
+                  />
+                  <path
+                    className="cls-2"
+                    d="M259.13,224.63H383.52v32.84H300.29v29.47h75.13v32.61l-75.13.23v29.69h85.47V382.3H259.13Z"
+                  />
+                </g>
               </g>
-            </g>
-          </svg>
+            </svg>
+          </div>
+          <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
+            (ReactRe.stringToElement "Reason Vienna")
+          </h2>
+          <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
+            (ReactRe.stringToElement state.description)
+          </h2>
         </div>
-        <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
-          (ReactRe.stringToElement "Reason Vienna")
-        </h2>
-        <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
-          (ReactRe.stringToElement state.description)
-        </h2>
+        <ul> (ReactRe.arrayToElement events) </ul>
       </div>
-      <ul> (ReactRe.arrayToElement events) </ul>
-      <ul>
-        (ReactRe.stringToElement "ReasonML meetups from around the World:")
-        (ReactRe.arrayToElement worldWideReasonMeetups)
-      </ul>
+      <Footer meetups=state.meetups />
     </div>
   };
 };
