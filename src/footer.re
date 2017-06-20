@@ -1,6 +1,6 @@
 let component = ReasonReact.statefulComponent "Footer";
 
-type props = {meetups: array Meetup.Meetup.reasonMeetup};
+type props = {meetups: array Meetup.reasonMeetup};
 type state = unit;
 let getInitialState _ => ();
 let textColor = "#b2b0b0";
