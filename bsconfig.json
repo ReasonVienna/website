@@ -3,15 +3,12 @@
   comma. If this screws with your editor highlighting, please tell us by filing
   an issue! */
 {
-  "name": "create-reason-react-app",
-  "reason": {
-    "react-jsx": true
-  },
+  "name": "reasonvienna-website",
+  "reason" : { "react-jsx" : 2},
   "bs-dependencies": [
     "reason-react",
     "bs-director",
-    "bs-fetch",
-    "bs-moment"
+    "bs-fetch"
   ],
   "sources": [
     {

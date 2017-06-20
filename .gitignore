@@ -4,5 +4,6 @@
 /lib/*
 !/lib/js/*
 /build/
+/bundledOutputs/
 *.log
 .DS_Store

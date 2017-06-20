@@ -1,6 +1,15 @@
-open MomentRe;
+let component = ReasonReact.statelessComponent "Page";
 
-module App = {
+let handleClick _event _ _ => Js.log "clicked!";
+
+let make _children => {
+  ...component,
+  render: fun () self =>
+    <div onClick=(self.handle handleClick)> (ReasonReact.stringToElement "eeww") </div>
+};
+
+
+/* module App = {
   include ReactRe.Component.Stateful;
   type props = {title: string};
   type event = {id: string, title: string, description: string, time: float};
@@ -81,7 +90,7 @@ module App = {
       state.events |>
       Array.map (
         fun event => {
-          let meetupTime = event.time |> Js.Date.fromFloat |> Js.Date.toISOString |> moment;
+          let meetupTime = event.time |> Js.Date.fromFloat |> Js.Date.toISOString;
           <div key=event.id>
             <h1> (ReactRe.stringToElement "When? ") </h1>
             <time
@@ -96,9 +105,9 @@ module App = {
                   padding::"10px"
                   ()
               )>
-              (ReactRe.stringToElement (Moment.format "dddd, MMMM D, YYYY" meetupTime))
+              (ReactRe.stringToElement meetupTime)
               <br />
-              (ReactRe.stringToElement (Moment.format "H:mm" meetupTime))
+              (ReactRe.stringToElement meetupTime)
             </time>
             <h1> (ReactRe.stringToElement event.title) </h1>
             <div dangerouslySetInnerHTML={"__html": event.description} />
@@ -152,4 +161,4 @@ module App = {
 
 include ReactRe.CreateComponent App;
 
-let createElement ::title => wrapProps {title: title};
+let createElement ::title => wrapProps {title: title}; */

@@ -18,16 +18,15 @@
   "dependencies": {
     "bs-director": "^0.0.1",
     "bs-fetch": "buckletypes/bs-fetch",
-    "bs-moment": "github:buckletypes/bs-moment",
     "moment": "^2.18.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason-react": "https://github.com/reasonml/reason-react.git"
+    "reason-react": ">=0.1.4"
   },
   "devDependencies": {
-    "bs-platform": "^1.7.3",
+    "bs-platform": "^1.7.5",
     "bs-jest": "^0.1.0",
-    "webpack": "^2.5.1",
-    "webpack-dev-server": "2"
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
   }
 }
