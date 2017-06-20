@@ -1,5 +1,5 @@
 type reasonMeetup = {city: string, name: string, page: string, logo: string};
-let component = ReasonReact.statefulComponent "Meetup";
+let component = ReasonReact.statelessComponent "Meetup";
 type props = {meetup: reasonMeetup};
 type state = unit;
 let componentColor = "#f6f4f4";

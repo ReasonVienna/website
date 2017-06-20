@@ -29,7 +29,7 @@ let copyrightSkin = ReactDOMRe.Style.make color::textColor ();
 let make ::meetups _children => {
   ...component,
   render: fun () _self => {
-    let ms = meetups |> Array.map (fun m => <Meetup reasonMeetup=m />);
+    let ms = meetups |> Array.map (fun meetup => <Meetup reasonMeetup=meetup />);
     <div className="App-footer" style=footerSkin>
       <div> (ReasonReact.arrayToElement ms) </div>
       <div style=(ReactDOMRe.Style.make marginTop::"25px" ())>
