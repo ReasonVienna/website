@@ -8,13 +8,8 @@ code {
   color: #8f8f8f;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-}
-
 .App {
-  margin: 50px;
+  text-align: center;
 }
 
 .App-logo {
@@ -25,23 +20,13 @@ ul {
 .App-header {
   display: flex;
   align-items: center;
-  margin: 50px 0;
+  margin: 100px;
   color: #333333;
 }
 
 .App-intro {
   font-size: large;
   color: #444;
-}
-
-.block {
-  display: inline-block;
-  fontSize: "1rem";
-  fontWeight: "300";
-  width: "200px";
-  textAlign: "center";
-  margin: 5px;
-  border: 2px gray;
 }
 
 @keyframes App-logo-spin {
