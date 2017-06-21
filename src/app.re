@@ -68,20 +68,22 @@ let make _children => {
         meetups: knownMeetups
       }
     },
-    didMount: fun _state _self => {
-      let changeState items =>
+    didMount: fun _state self => {
+      let changeState items _state _self =>
         ReasonReact.Update {description: "events loaded!", events: items, meetups: knownMeetups};
-      let processJson c r json =>
+      let processJson json =>
         unwrapUnsafely (Js.Json.decodeArray json) |> (
           fun items =>
             items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |>
-            Js.Array.map convertToEvent |> c |> r
+            Js.Array.map convertToEvent
         );
       let _ =
         Js.Promise.(
           Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740" |>
           then_ Bs_fetch.Response.json |>
-          then_ (processJson changeState resolve)
+          then_ (fun result => { processJson(result) |> fun events => {
+            self.update changeState(events)
+          } } |> resolve )
         );
       ReasonReact.NoUpdate
     },
