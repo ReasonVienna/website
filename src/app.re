@@ -43,6 +43,14 @@ let knownMeetups: array Meetup.reasonMeetup = [|
   }
 |];
 
+let upcomingEventsOrWelcomeMessage scheduledEvents =>
+  switch (Array.length scheduledEvents) {
+    | 0 => <NoUpcomingEvents />;
+    | _ => ReactRe.arrayToElement (scheduledEvents
+      |> Array.map
+        (fun (event:Event.event) => <Event event=event /> ));
+};
+
 let component = ReasonReact.statefulComponent "App";
 
 let make _children => {
@@ -105,9 +113,7 @@ let make _children => {
               (ReactRe.stringToElement state.description)
             </h2>
           </div>
-          <ul> (ReactRe.arrayToElement (state.events
-            |> Array.map
-              (fun (event:Event.event) => <Event event=event /> ))) </ul>
+          <ul> (upcomingEventsOrWelcomeMessage state.events) </ul>
         </div>
         <Footer meetups=state.meetups />
       </div>
