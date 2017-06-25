@@ -9,7 +9,8 @@
     "reason-react",
     "bs-director",
     "bs-fetch",
-    "bs-json"
+    "bs-json",
+    "bs-moment"
   ],
   "sources": [
     {

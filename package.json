@@ -19,6 +19,7 @@
     "bs-director": "^0.0.1",
     "bs-fetch": "buckletypes/bs-fetch",
     "bs-json": "github:buckletypes/bs-json",
+    "bs-moment": "github:buckletypes/bs-moment",
     "moment": "^2.18.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
