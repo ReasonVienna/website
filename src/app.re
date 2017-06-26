@@ -33,13 +33,31 @@ let knownMeetups: array Meetup.reasonMeetup = [|
     city: "Oslo",
     name: "Reason Oslo Meetup",
     page: "https://reasonoslo.xyz/",
-    logo: "https://reasonoslo.xyz/logo.png"
+    logo: "https://reasonoslo.xyz/static/logo.png"
   },
   {
     city: "Montreal",
     name: "ReasonMTL Montreal",
     page: "https://www.meetup.com/ReasonMTL/",
-    logo: ""
+    logo: "https://secure.meetupstatic.com/photos/event/2/9/3/6/global_461710550.jpeg"
+  },
+  {
+    city: "San Francisco",
+    name: "Silicon Valley OCaml/Reason",
+    page: "https://www.meetup.com/sv-ocaml/",
+    logo: "https://secure.meetupstatic.com/photos/event/2/8/c/a/global_332890442.jpeg"
+  },
+  {
+    city: "London",
+    name: "ReasonLDN",
+    page: "https://www.meetup.com/ReasonLDN/",
+    logo: "https://secure.meetupstatic.com/photos/event/5/1/7/8/global_461900856.jpeg"
+  },
+  {
+    city: "Singapore",
+    name: "Singapore OCaml/Reason",
+    page: "https://www.meetup.com/SG-OCaml/",
+    logo: "https://secure.meetupstatic.com/photos/event/2/8/c/a/global_332890442.jpeg"
   }
 |];
 
