@@ -1,8 +1,6 @@
-type event = {id: string, title: string, description: string, time: float};
-
 type state = {
   description: string,
-  events: array event,
+  events: array Event.event,
   meetups: array Meetup.reasonMeetup
 };
 
@@ -63,15 +61,12 @@ let knownMeetups: array Meetup.reasonMeetup = [|
   }
 |];
 
-let unwrapUnsafely =
-  fun
-  | Some v => v
-  | None => raise (Invalid_argument "unwrapUnsafely called on None");
-let convertToEvent item => {
-  id: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "id")),
-  title: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "name")),
-  description: unwrapUnsafely (Js.Json.decodeString (Js_dict.unsafeGet item "description")),
-  time: unwrapUnsafely (Js.Json.decodeNumber (Js_dict.unsafeGet item "time"))
+let upcomingEventsOrWelcomeMessage scheduledEvents =>
+  switch (Array.length scheduledEvents) {
+    | 0 => <NoUpcomingEvents />;
+    | _ => ReactRe.arrayToElement (scheduledEvents
+      |> Array.map
+        (fun (event:Event.event) => <Event event=event /> ));
 };
 
 let component = ReasonReact.statefulComponent "App";
@@ -87,51 +82,17 @@ let make _children => {
       }
     },
     didMount: fun _state self => {
-      let changeState items _state _self =>
-        ReasonReact.Update {description: "events loaded!", events: items, meetups: knownMeetups};
-      let processJson json =>
-        unwrapUnsafely (Js.Json.decodeArray json) |> (
-          fun items =>
-            items |> Js.Array.map (fun item => item |> Js.Json.decodeObject |> unwrapUnsafely) |>
-            Js.Array.map convertToEvent
-        );
+      let changeState events state _self => ReasonReact.Update {...state, description: "events loaded!", events: events};
+
       let _ =
         Js.Promise.(
           Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740" |>
           then_ Bs_fetch.Response.json |>
-          then_ (fun result => { processJson(result) |> fun events => {
-            self.update changeState(events)
-          } } |> resolve )
+          then_ (fun result => { Event.parse result |> self.update changeState } |> resolve )
         );
       ReasonReact.NoUpdate
     },
-    render: fun state _self => {
-      let events =
-        state.events |>
-        Array.map (
-          fun event => {
-            let meetupTime = event.time |> Js.Date.fromFloat |> Js.Date.toISOString;
-            <div key=event.id>
-              <h1> (ReactRe.stringToElement "When? ") </h1>
-              <time
-                style=(
-                  ReactDOMRe.Style.make
-                    background::"white"
-                    color::"#607096"
-                    display::"inline-block"
-                    fontSize::"2rem"
-                    fontWeight::"700"
-                    margin::"1em 0"
-                    padding::"10px"
-                    ()
-                )>
-                (ReactRe.stringToElement meetupTime)
-              </time>
-              <h1> (ReactRe.stringToElement event.title) </h1>
-              <div dangerouslySetInnerHTML={"__html": event.description} />
-            </div>
-          }
-        );
+    render: fun (state:state) _self => {
       <div>
         <div
           className="App"
@@ -170,7 +131,7 @@ let make _children => {
               (ReactRe.stringToElement state.description)
             </h2>
           </div>
-          <ul> (ReactRe.arrayToElement events) </ul>
+          <ul> (upcomingEventsOrWelcomeMessage state.events) </ul>
         </div>
         <Footer meetups=state.meetups />
       </div>
