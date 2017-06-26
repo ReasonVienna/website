@@ -10,7 +10,9 @@
     "dev": "webpack-dev-server",
     "bsb-watch": "bsb -make-world -w",
     "build": "bsb -make-world && webpack",
-    "clean": "bsb -clean-world"
+    "clean": "bsb -clean-world",
+    "deploy": "npm run clean && NODE_ENV=production npm run build && npm run deploy:s3",
+    "deploy:s3": "s3_website push"
   },
   "keywords": [],
   "author": "Mateusz Zatorski",
