@@ -14,7 +14,8 @@
   ],
   "sources": [
     {
-      "dir": "src"
+      "dir": "src",
+      "subdirs": [ "pages", "components" ]
     }
   ]
 }

@@ -1,7 +1,12 @@
+type router = Js.t {. init : (string => unit) [@bs.meth]};
+
+type routes =
+  | Speakers
+  | Events;
+
 type state = {
-  description: string,
-  events: array Event.event,
-  meetups: array Meetup.reasonMeetup
+  meetups: array Meetup.reasonMeetup,
+  selectedRoute : routes
 };
 
 let knownMeetups: array Meetup.reasonMeetup = [|
@@ -61,14 +66,6 @@ let knownMeetups: array Meetup.reasonMeetup = [|
   }
 |];
 
-let upcomingEventsOrWelcomeMessage scheduledEvents =>
-  switch (Array.length scheduledEvents) {
-    | 0 => <NoUpcomingEvents />;
-    | _ => ReactRe.arrayToElement (scheduledEvents
-      |> Array.map
-        (fun (event:Event.event) => <Event event=event /> ));
-};
-
 let component = ReasonReact.statefulComponent "App";
 
 let make _children => {
@@ -76,20 +73,23 @@ let make _children => {
     ...component,
     initialState: fun () => {
       {
-        description: "loading...",
-        events: [||],
-        meetups: knownMeetups
+        meetups: knownMeetups,
+        selectedRoute: Events
       }
     },
     didMount: fun _state self => {
-      let changeState events state _self => ReasonReact.Update {...state, description: "events loaded!", events: events};
+      let f1 () state _self => { Js.log "called /"; ReasonReact.Update {...state, selectedRoute: Events } };
+      let f2 () state _self => { Js.log "called /events"; ReasonReact.Update {...state, selectedRoute: Events } };
+      let f3 () state _self => { Js.log "called /speakers"; ReasonReact.Update {...state, selectedRoute: Speakers } };
+      let router =
+        DirectorRe.makeRouter {
+          "/": self.update f1,
+          "/events": self.update f2,
+          "/speakers": self.update f3
+        };
+      Js.log router;
+      DirectorRe.init router "/";
 
-      let _ =
-        Js.Promise.(
-          Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740" |>
-          then_ Bs_fetch.Response.json |>
-          then_ (fun result => { Event.parse result |> self.update changeState } |> resolve )
-        );
       ReasonReact.NoUpdate
     },
     render: fun (state:state) _self => {
@@ -127,11 +127,13 @@ let make _children => {
             <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
               (ReactRe.stringToElement "Reason Vienna")
             </h2>
-            <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
-              (ReactRe.stringToElement state.description)
-            </h2>
           </div>
-          <ul> (upcomingEventsOrWelcomeMessage state.events) </ul>
+          (switch (state.selectedRoute)
+          {
+            | Events => <Events />
+            | Speakers => <div> (ReactRe.stringToElement "here will be spekers") </div>
+          })
+
         </div>
         <Footer meetups=state.meetups />
       </div>

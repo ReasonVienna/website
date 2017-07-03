@@ -1,5 +1,5 @@
 {
-  "name": "create-reason-react-app",
+  "name": "reasonvienna-website",
   "private": true,
   "version": "0.0.0",
   "description": "",
@@ -15,13 +15,14 @@
     "deploy:s3": "s3_website push"
   },
   "keywords": [],
-  "author": "Mateusz Zatorski",
+  "author": "Nik Graf",
   "license": "MIT",
   "dependencies": {
-    "bs-director": "^0.0.1",
+    "bs-director": "github:buckletypes/bs-director",
     "bs-fetch": "buckletypes/bs-fetch",
     "bs-json": "github:buckletypes/bs-json",
     "bs-moment": "github:buckletypes/bs-moment",
+    "director": "^1.2.8",
     "moment": "^2.18.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
