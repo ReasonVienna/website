@@ -24,7 +24,7 @@ let make ::event _children => {
   {
     ...component,
     render: fun () _self => {
-      let meetupTime = event.time |> Js.Date.fromFloat |> Js.Date.toISOString;
+      let meetupTime = event.time |> Js.Date.fromFloat |> Js.Date.toISOString |> MomentRe.moment;
       <div key=event.id>
         <h1> (ReactRe.stringToElement "When? ") </h1>
         <time
@@ -39,7 +39,9 @@ let make ::event _children => {
               padding::"10px"
               ()
           )>
-          (ReactRe.stringToElement meetupTime)
+          (ReactRe.stringToElement (MomentRe.Moment.format "dddd, MMMM D, YYYY" meetupTime))
+          <br />
+          (ReactRe.stringToElement (MomentRe.Moment.format "H:mm" meetupTime))
         </time>
         <h1> (ReactRe.stringToElement event.title) </h1>
         <div dangerouslySetInnerHTML={"__html": event.description} />
