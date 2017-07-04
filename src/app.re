@@ -8,54 +8,63 @@ let knownMeetups: array Meetup.reasonMeetup = [|
   {
     city: "Chicago",
     name: "Chicago ReasonML",
+    shortName: "CHG",
     page: "https://www.meetup.com/Chicago-ReasonML/",
     logo: "https://secure.meetupstatic.com/photos/event/3/4/c/b/global_459553515.jpeg"
   },
   {
     city: "New York City",
     name: "Reason NYC",
+    shortName: "NYC",
     page: "https://www.meetup.com/ReasonML-NYC/",
     logo: "https://secure.meetupstatic.com/photos/event/9/1/2/f/global_461257167.jpeg"
   },
   {
     city: "Sydney",
     name: "Reason Sydney",
+    shortName: "SDY",
     page: "https://www.meetup.com/reason-sydney/",
     logo: "https://secure.meetupstatic.com/photos/event/c/e/4/c/global_460672812.jpeg"
   },
   {
     city: "Paris",
     name: "ReasonML Paris",
+    shortName: "PAR",
     page: "https://www.meetup.com/ReasonML-Paris/",
     logo: "https://secure.meetupstatic.com/photos/event/6/4/b/1/global_457585777.jpeg"
   },
   {
     city: "Oslo",
     name: "Reason Oslo Meetup",
+    shortName: "OSL",
     page: "https://reasonoslo.xyz/",
     logo: "https://reasonoslo.xyz/static/logo.png"
   },
   {
     city: "Montreal",
     name: "ReasonMTL Montreal",
+    shortName: "MTL",
     page: "https://www.meetup.com/ReasonMTL/",
     logo: "https://secure.meetupstatic.com/photos/event/2/9/3/6/global_461710550.jpeg"
   },
   {
     city: "San Francisco",
     name: "Silicon Valley OCaml/Reason",
+    shortName: "SF",
     page: "https://www.meetup.com/sv-ocaml/",
     logo: "https://secure.meetupstatic.com/photos/event/2/8/c/a/global_332890442.jpeg"
   },
   {
     city: "London",
     name: "ReasonLDN",
+    shortName: "LDN",
     page: "https://www.meetup.com/ReasonLDN/",
     logo: "https://secure.meetupstatic.com/photos/event/5/1/7/8/global_461900856.jpeg"
   },
   {
     city: "Singapore",
     name: "Singapore OCaml/Reason",
+    shortName: "SIP",
     page: "https://www.meetup.com/SG-OCaml/",
     logo: "https://secure.meetupstatic.com/photos/event/2/8/c/a/global_332890442.jpeg"
   }
