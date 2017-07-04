@@ -1,44 +1,33 @@
-type reasonMeetup = {city: string, name: string, page: string, logo: string};
+type reasonMeetup = {city: string, name: string, shortName: string, page: string, logo: string};
 let component = ReasonReact.statelessComponent "Meetup";
 type props = {meetup: reasonMeetup};
-type state = unit;
-let componentColor = "#f6f4f4";
-let skin (test: string) =>
+let skin =
   ReactDOMRe.Style.make
-    background::componentColor
-    color::"#607096"
-    display::"block"
-    textAlign::"center"
-    backgroundImage::(String.concat "" ["url(", test, ")"])
-    backgroundRepeat::"no-repeat"
-    backgroundPosition::"center center"
-    backgroundSize::"50%"
+    color::"#f6f4f4"
     margin::"0 auto"
-    height::"100px"
-    width::"100px"
-    borderRadius::"100px"
-    border::"3px solid #747373"
+    height::"50px"
+    width::"50px"
     ();
 let linkSkin =
   ReactDOMRe.Style.make
-    color::componentColor
+    color::"gray"
     fontFamily::"Helvetica Neue, Open Sans, sans-serif"
+    fontWeight::"bold"
     lineHeight::"1.6"
     fontSize::"16px"
     textDecoration::"none"
-    margin::"5px"
+    margin::"2px"
+    textAlign::"center"
     ();
-let getInitialState _ => ();
-
 
 let make ::reasonMeetup _children => {
   ...component,
   render: fun () _self => {
     <span className="block">
-      <span> <a href=reasonMeetup.page> <span style=(skin reasonMeetup.logo) /> </a> </span>
-      <span>
-        <a href=reasonMeetup.page style=linkSkin> (ReactRe.stringToElement reasonMeetup.name) </a>
-      </span>
+        <div> <a href=reasonMeetup.page> <img src=reasonMeetup.logo style=skin /> </a> </div>
+        <div>
+          <a style=linkSkin href=reasonMeetup.page> (ReactRe.stringToElement reasonMeetup.shortName) </a>
+        </div>
     </span>;
   }
 };
