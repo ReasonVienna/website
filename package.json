@@ -1,36 +1,25 @@
 {
-  "name": "create-reason-react-app",
+  "name": "website",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run dev | npm run bsb-watch",
-    "dev": "webpack-dev-server",
-    "bsb-watch": "bsb -make-world -w",
-    "build": "bsb -make-world && webpack",
-    "clean": "bsb -clean-world",
-    "deploy": "npm run clean && NODE_ENV=production npm run build && npm run deploy:s3",
-    "deploy:s3": "s3_website push"
-  },
-  "keywords": [],
-  "author": "Mateusz Zatorski",
-  "license": "MIT",
   "dependencies": {
-    "bs-director": "^0.0.1",
-    "bs-fetch": "buckletypes/bs-fetch",
-    "bs-json": "github:buckletypes/bs-json",
-    "bs-moment": "github:buckletypes/bs-moment",
+    "bs-fetch": "github:reasonml-community/bs-fetch",
+    "bs-json": "^0.2.3",
+    "bs-moment": "^0.1.4",
     "moment": "^2.18.1",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "reason-react": ">=0.1.4"
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "reason-scripts": "0.6.9"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "prepare": "npm link bs-platform"
   },
   "devDependencies": {
-    "bs-platform": "^1.7.5",
     "bs-jest": "^0.1.0",
-    "webpack": "^3.0.0",
-    "webpack-dev-server": "^2.5.0"
+    "reason-react": "^0.2.4"
   }
 }
