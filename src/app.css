@@ -36,15 +36,19 @@ ul {
 
 .block {
   display: inline-block;
-  fontSize: "1rem";
-  fontWeight: "300";
-  width: "200px";
-  textAlign: "center";
+  fontSize: '1rem';
+  fontWeight: '300';
+  width: '200px';
+  textAlign: 'center';
   margin: 5px;
   border: 2px gray;
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
