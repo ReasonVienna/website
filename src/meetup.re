@@ -1,13 +1,19 @@
-type reasonMeetup = {city: string, name: string, shortName: string, page: string, logo: string};
+type reasonMeetup = {
+  city: string,
+  name: string,
+  shortName: string,
+  page: string,
+  logo: string
+};
+
 let component = ReasonReact.statelessComponent "Meetup";
+
 type props = {meetup: reasonMeetup};
+
 let skin =
   ReactDOMRe.Style.make
-    color::"#f6f4f4"
-    margin::"0 auto"
-    height::"50px"
-    width::"50px"
-    ();
+    color::"#f6f4f4" margin::"0 auto" height::"50px" width::"50px" ();
+
 let linkSkin =
   ReactDOMRe.Style.make
     color::"gray"
@@ -22,12 +28,17 @@ let linkSkin =
 
 let make ::reasonMeetup _children => {
   ...component,
-  render: fun () _self => {
+  render: fun _self =>
     <span className="block">
-        <div> <a href=reasonMeetup.page> <img src=reasonMeetup.logo style=skin /> </a> </div>
-        <div>
-          <a style=linkSkin href=reasonMeetup.page> (ReactRe.stringToElement reasonMeetup.shortName) </a>
-        </div>
-    </span>;
-  }
+      <div>
+        <a href=reasonMeetup.page>
+          <img src=reasonMeetup.logo style=skin />
+        </a>
+      </div>
+      <div>
+        <a style=linkSkin href=reasonMeetup.page>
+          (ReasonReact.stringToElement reasonMeetup.shortName)
+        </a>
+      </div>
+    </span>
 };

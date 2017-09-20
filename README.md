@@ -1,14 +1,13 @@
 ### Getting started
 
 1. Clone the repo
-2. `npm install`
-3. `npm start`
-4. Open browser and navigate to: http://localhost:8080/
+2. `yarn install`
+3. `yarn start`
+4. Open browser and navigate to: http://localhost:3000/
 
 ### Intro
 
-The project uses bucklescript build system and webpack under the hood. When you run `yarn start`, `bsb` will run in watch mode and in parallel webpack's dev server is started at http://localhost:8080/. Files build by `bsb` can be found in the `/lib` directory. The amazing thing about `bsb` is that it produces readable javascript files.
-After these JS files are produced, `webpack-dev-server` uses them.
+The project uses create-react-app with [reason-scripts](https://github.com/reasonml-community/reason-scripts)
 
 ### Ideas for future TODOs
 
