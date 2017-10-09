@@ -78,7 +78,8 @@ let upcomingEventsOrWelcomeMessage scheduledEvents =>
   | 0 => <NoUpcomingEvents />
   | _ =>
     ReasonReact.arrayToElement (
-      scheduledEvents |> Array.map (fun (event: Event.event) => <Event event />)
+      scheduledEvents
+      |> Array.mapi (fun index (event: Event.event) => <Event key=(string_of_int index) event />)
     )
   };
 
@@ -87,8 +88,8 @@ let component = ReasonReact.reducerComponent "App";
 let make _children => {
   ...component,
   initialState: fun () => {description: "loading...", events: [||], meetups: knownMeetups},
-  didMount: fun {reduce} => {
-    let changeState events => reduce (fun _ => UpdateEvents events) ();
+  didMount: fun self => {
+    let changeState events => self.reduce (fun _ => UpdateEvents events) ();
     let _ =
       Js.Promise.(
         Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
@@ -142,6 +143,7 @@ let make _children => {
         </div>
         <ul> (upcomingEventsOrWelcomeMessage state.events) </ul>
       </div>
+      <MembersList />
       <Footer meetups=state.meetups />
     </div>
 };

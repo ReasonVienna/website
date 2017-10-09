@@ -7,7 +7,9 @@ let footerSkin = ReactDOMRe.Style.make padding::"10px" borderTop::"10px" width::
 let make ::meetups _children => {
   ...component,
   render: fun _self => {
-    let ms = meetups |> Array.map (fun meetup => <Meetup reasonMeetup=meetup />);
+    let ms =
+      meetups
+      |> Array.mapi (fun index meetup => <Meetup key=(string_of_int index) reasonMeetup=meetup />);
     <div className="App-footer" style=footerSkin>
       <hr />
       <h2> (ReasonReact.stringToElement "Meetups around the World") </h2>
