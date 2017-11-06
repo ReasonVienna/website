@@ -6,32 +6,34 @@ type reasonMeetup = {
   logo: string
 };
 
-let component = ReasonReact.statelessComponent "Meetup";
+let component = ReasonReact.statelessComponent("Meetup");
 
 type props = {meetup: reasonMeetup};
 
-let skin = ReactDOMRe.Style.make color::"#f6f4f4" margin::"0 auto" height::"50px" width::"50px" ();
+let skin =
+  ReactDOMRe.Style.make(~color="#f6f4f4", ~margin="0 auto", ~height="50px", ~width="50px", ());
 
 let linkSkin =
-  ReactDOMRe.Style.make
-    color::"gray"
-    fontFamily::"Helvetica Neue, Open Sans, sans-serif"
-    fontWeight::"bold"
-    lineHeight::"1.6"
-    fontSize::"16px"
-    textDecoration::"none"
-    margin::"2px"
-    textAlign::"center"
-    ();
+  ReactDOMRe.Style.make(
+    ~color="gray",
+    ~fontFamily="Helvetica Neue, Open Sans, sans-serif",
+    ~fontWeight="bold",
+    ~lineHeight="1.6",
+    ~fontSize="16px",
+    ~textDecoration="none",
+    ~margin="2px",
+    ~textAlign="center",
+    ()
+  );
 
-let make ::reasonMeetup _children => {
+let make = (~reasonMeetup, _children) => {
   ...component,
-  render: fun _self =>
+  render: (_self) =>
     <span className="block">
       <div> <a href=reasonMeetup.page> <img src=reasonMeetup.logo style=skin /> </a> </div>
       <div>
         <a style=linkSkin href=reasonMeetup.page>
-          (ReasonReact.stringToElement reasonMeetup.shortName)
+          (ReasonReact.stringToElement(reasonMeetup.shortName))
         </a>
       </div>
     </span>
