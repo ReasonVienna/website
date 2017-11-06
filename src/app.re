@@ -1,13 +1,13 @@
 type actions =
-  | UpdateEvents (array Event.event);
+  | UpdateEvents(array(Event.event));
 
 type state = {
   description: string,
-  events: array Event.event,
-  meetups: array Meetup.reasonMeetup
+  events: array(Event.event),
+  meetups: array(Meetup.reasonMeetup)
 };
 
-let knownMeetups: array Meetup.reasonMeetup = [|
+let knownMeetups: array(Meetup.reasonMeetup) = [|
   {
     city: "Chicago",
     name: "Chicago ReasonML",
@@ -73,50 +73,54 @@ let knownMeetups: array Meetup.reasonMeetup = [|
   }
 |];
 
-let upcomingEventsOrWelcomeMessage scheduledEvents =>
-  switch (Array.length scheduledEvents) {
+let upcomingEventsOrWelcomeMessage = (scheduledEvents) =>
+  switch (Array.length(scheduledEvents)) {
   | 0 => <NoUpcomingEvents />
   | _ =>
-    ReasonReact.arrayToElement (
+    ReasonReact.arrayToElement(
       scheduledEvents
-      |> Array.mapi (fun index (event: Event.event) => <Event key=(string_of_int index) event />)
+      |> Array.mapi((index, event: Event.event) => <Event key=(string_of_int(index)) event />)
     )
   };
 
-let component = ReasonReact.reducerComponent "App";
+let component = ReasonReact.reducerComponent("App");
 
-let make _children => {
+let make = (_children) => {
   ...component,
-  initialState: fun () => {description: "loading...", events: [||], meetups: knownMeetups},
-  didMount: fun self => {
-    let changeState events => self.reduce (fun _ => UpdateEvents events) ();
+  initialState: () => {description: "loading...", events: [||], meetups: knownMeetups},
+  didMount: (self) => {
+    let changeState = (events) => self.reduce((_) => UpdateEvents(events), ());
     let _ =
       Js.Promise.(
-        Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
-        |> then_ Bs_fetch.Response.json
-        |> then_ (fun result => Event.parse result |> changeState |> resolve)
+        Bs_fetch.fetch(
+          "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
+        )
+        |> then_(Bs_fetch.Response.json)
+        |> then_((result) => Event.parse(result) |> changeState |> resolve)
       );
     ReasonReact.NoUpdate
   },
-  reducer: fun action state =>
+  reducer: (action, state) =>
     switch action {
-    | UpdateEvents events => ReasonReact.Update {...state, events}
+    | UpdateEvents(events) => ReasonReact.Update({...state, events})
     },
-  render: fun {state} =>
+  render: ({state}) =>
     <div>
       <div
         className="App"
         style=(
-          ReactDOMRe.Style.make
-            fontFamily::"-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+          ReactDOMRe.Style.make(
+            ~fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
             ()
+          )
         )>
         <div className="App-header">
-          <div style=(ReactDOMRe.Style.make display::"flex" width::"50px" cursor::"pointer" ())>
+          <div
+            style=(ReactDOMRe.Style.make(~display="flex", ~width="50px", ~cursor="pointer", ()))>
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 406 406">
               <defs>
                 <style>
-                  (ReasonReact.stringToElement ".cls-1{fill:#607096;}.cls-2{fill:#fff;}")
+                  (ReasonReact.stringToElement(".cls-1{fill:#607096;}.cls-2{fill:#fff;}"))
                 </style>
               </defs>
               <g id="Ebene_2">
@@ -134,14 +138,14 @@ let make _children => {
               </g>
             </svg>
           </div>
-          <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
-            (ReasonReact.stringToElement "Reason Vienna")
+          <h2 style=(ReactDOMRe.Style.make(~marginLeft="30px", ~fontSize="2em", ()))>
+            (ReasonReact.stringToElement("Reason Vienna"))
           </h2>
-          <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
-            (ReasonReact.stringToElement state.description)
+          <h2 style=(ReactDOMRe.Style.make(~marginLeft="30px", ~fontSize="2em", ()))>
+            (ReasonReact.stringToElement(state.description))
           </h2>
         </div>
-        <ul> (upcomingEventsOrWelcomeMessage state.events) </ul>
+        <ul> (upcomingEventsOrWelcomeMessage(state.events)) </ul>
       </div>
       <MembersList />
       <Footer meetups=state.meetups />
