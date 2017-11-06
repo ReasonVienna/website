@@ -78,8 +78,8 @@ let upcomingEventsOrWelcomeMessage scheduledEvents =>
   | 0 => <NoUpcomingEvents />
   | _ =>
     ReasonReact.arrayToElement (
-      scheduledEvents |>
-      Array.map (fun (event: Event.event) => <Event event />)
+      scheduledEvents
+      |> Array.mapi (fun index (event: Event.event) => <Event key=(string_of_int index) event />)
     )
   };
 
@@ -87,18 +87,14 @@ let component = ReasonReact.reducerComponent "App";
 
 let make _children => {
   ...component,
-  initialState: fun () => {
-    description: "loading...",
-    events: [||],
-    meetups: knownMeetups
-  },
-  didMount: fun {reduce} => {
-    let changeState events => reduce (fun _ => UpdateEvents events) ();
+  initialState: fun () => {description: "loading...", events: [||], meetups: knownMeetups},
+  didMount: fun self => {
+    let changeState events => self.reduce (fun _ => UpdateEvents events) ();
     let _ =
       Js.Promise.(
-        Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740" |>
-        then_ Bs_fetch.Response.json |>
-        then_ (fun result => Event.parse result |> changeState |> resolve)
+        Bs_fetch.fetch "https://crossorigin.me/https://api.meetup.com/Reason-Vienna/events?photo-host=secure&page=20&sig_id=12607916&sig=197d614dc57e10c6ee4c20dbfe9a191caf88a740"
+        |> then_ Bs_fetch.Response.json
+        |> then_ (fun result => Event.parse result |> changeState |> resolve)
       );
     ReasonReact.NoUpdate
   },
@@ -116,21 +112,11 @@ let make _children => {
             ()
         )>
         <div className="App-header">
-          <div
-            style=(
-              ReactDOMRe.Style.make
-                display::"flex" width::"50px" cursor::"pointer" ()
-            )>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="50"
-              height="50"
-              viewBox="0 0 406 406">
+          <div style=(ReactDOMRe.Style.make display::"flex" width::"50px" cursor::"pointer" ())>
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 406 406">
               <defs>
                 <style>
-                  (
-                    ReasonReact.stringToElement ".cls-1{fill:#607096;}.cls-2{fill:#fff;}"
-                  )
+                  (ReasonReact.stringToElement ".cls-1{fill:#607096;}.cls-2{fill:#fff;}")
                 </style>
               </defs>
               <g id="Ebene_2">
@@ -148,17 +134,16 @@ let make _children => {
               </g>
             </svg>
           </div>
-          <h2
-            style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
+          <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
             (ReasonReact.stringToElement "Reason Vienna")
           </h2>
-          <h2
-            style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
+          <h2 style=(ReactDOMRe.Style.make marginLeft::"30px" fontSize::"2em" ())>
             (ReasonReact.stringToElement state.description)
           </h2>
         </div>
         <ul> (upcomingEventsOrWelcomeMessage state.events) </ul>
       </div>
+      <MembersList />
       <Footer meetups=state.meetups />
     </div>
 };

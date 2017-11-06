@@ -1,4 +1,9 @@
-type event = {id: string, title: string, description: string, time: float};
+type event = {
+  id: string,
+  title: string,
+  description: string,
+  time: float
+};
 
 let component = ReasonReact.statelessComponent "Event";
 
@@ -20,8 +25,7 @@ let parse (json: Js.Json.t) => Decode.root json;
 let make ::event _children => {
   ...component,
   render: fun _self => {
-    let meetupTime =
-      event.time |> Js.Date.fromFloat |> Js.Date.toISOString |> MomentRe.moment;
+    let meetupTime = event.time |> Js.Date.fromFloat |> Js.Date.toISOString |> MomentRe.moment;
     <div key=event.id>
       <h1> (ReasonReact.stringToElement "When? ") </h1>
       <time
@@ -36,15 +40,9 @@ let make ::event _children => {
             padding::"10px"
             ()
         )>
-        (
-          ReasonReact.stringToElement (
-            MomentRe.Moment.format "dddd, MMMM D, YYYY" meetupTime
-          )
-        )
+        (ReasonReact.stringToElement (MomentRe.Moment.format "dddd, MMMM D, YYYY" meetupTime))
         <br />
-        (
-          ReasonReact.stringToElement (MomentRe.Moment.format "H:mm" meetupTime)
-        )
+        (ReasonReact.stringToElement (MomentRe.Moment.format "H:mm" meetupTime))
       </time>
       <h1> (ReasonReact.stringToElement event.title) </h1>
       <div dangerouslySetInnerHTML={"__html": event.description} />
